@@ -6,6 +6,9 @@ _contracts
 /cache
 /artifacts
 
+# misc
+**/.DS_Store
+
 # TypeChain files
 /typechain
 /typechain-types
