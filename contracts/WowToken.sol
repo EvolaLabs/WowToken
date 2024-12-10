@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.28;
 
 // OpenZeppelin Contracts (last updated v5.0.0) (utils/Context.sol)
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
         return msg.sender;
-    }
-
-    function _msgData() internal view virtual returns (bytes calldata) {
-        return msg.data;
     }
 }
 
@@ -54,43 +50,43 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
         _symbol = symbol_;
     }
 
-    function name() public view virtual returns (string memory) {
+    function name() external view virtual returns (string memory) {
         return _name;
     }
 
-    function symbol() public view virtual returns (string memory) {
+    function symbol() external view virtual returns (string memory) {
         return _symbol;
     }
 
-    function decimals() public view virtual returns (uint8) {
+    function decimals() external view virtual returns (uint8) {
         return 18;
     }
 
-    function totalSupply() public view virtual returns (uint256) {
+    function totalSupply() external view virtual returns (uint256) {
         return _totalSupply;
     }
 
-    function balanceOf(address account) public view virtual returns (uint256) {
+    function balanceOf(address account) external view virtual returns (uint256) {
         return _balances[account];
     }
 
-    function transfer(address to, uint256 value) public virtual returns (bool) {
+    function transfer(address to, uint256 value) external virtual returns (bool) {
         address owner = _msgSender();
         _transfer(owner, to, value);
         return true;
     }
 
-    function allowance(address owner, address spender) public view virtual returns (uint256) {
+    function allowance(address owner, address spender) external view virtual returns (uint256) {
         return _allowances[owner][spender];
     }
 
-    function approve(address spender, uint256 value) public virtual returns (bool) {
+    function approve(address spender, uint256 value) external virtual returns (bool) {
         address owner = _msgSender();
         _approve(owner, spender, value);
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 value) public virtual returns (bool) {
+    function transferFrom(address from, address to, uint256 value) external virtual returns (bool) {
         address spender = _msgSender();
         _spendAllowance(from, spender, value);
         _transfer(from, to, value);
@@ -140,13 +136,6 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
         _update(address(0), account, value);
     }
 
-    function _burn(address account, uint256 value) internal {
-        if (account == address(0)) {
-            revert ERC20InvalidSender(address(0));
-        }
-        _update(account, address(0), value);
-    }
-
     function _approve(address owner, address spender, uint256 value) internal {
         _approve(owner, spender, value, true);
     }
@@ -165,7 +154,7 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
     }
 
     function _spendAllowance(address owner, address spender, uint256 value) internal virtual {
-        uint256 currentAllowance = allowance(owner, spender);
+        uint256 currentAllowance = _allowances[owner][spender];
         if (currentAllowance != type(uint256).max) {
             if (currentAllowance < value) {
                 revert ERC20InsufficientAllowance(spender, currentAllowance, value);
@@ -182,10 +171,6 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
  * @dev Implementation of the WOW EARN token
  */
 contract WowToken is ERC20 {
-    /**
-     * @dev Initializes the contract by setting name to "WOW EARN", symbol to "WOW",
-     * and minting the initial supply of 1 billion tokens to the deployer
-     */
     constructor() ERC20("WOW EARN", "WOW") {
         _mint(msg.sender, 1_000_000_000 * 10 ** 18);
     }
